@@ -2,6 +2,8 @@ import datetime as time
 from tinydb import TinyDB, Query
 import sqlite3
 conn = sqlite3.connect('main.db')
+cone = sqlite3.connect('name.db')
+d = cone.cursor()
 c = conn.cursor()
 now = time.datetime.now()
 hour = now.hour
@@ -51,8 +53,8 @@ def adding_new_person():
         print("Please enter your two names")
         adding_new_person()
     else:
-        c.execute('CREATE TABLE IF NOT EXISTS name(fName TEXT, sName Text)')
-        c.execute("INSERT INTO name(fName, sName)VALUES(?,?)",(name1, name2))
+        d.execute('CREATE TABLE IF NOT EXISTS name(fName TEXT, sName Text)')
+        d.execute("INSERT INTO name(fName, sName)VALUES(?,?)",(name1, name2))
 
 #        global name3
 #        name3 = dict(name1,name2)
@@ -85,18 +87,21 @@ def buy_ticket():
     table1 = db.table('TicketsPeople.json')
     table1 = db.insert({name3:which_ticket})
     
+    c.execute('CREATE TABLE IF NOT EXISTS golden_ticket(name TEXT, ticket TEXT)')
+    c.execute('CREATE TABLE IF NOT EXISTS VIP_ticket(name TEXT, ticket TEXT)')
+    c.execute('CREATE TABLE IF NOT EXISTS ordinary_ticket(name TEXT, ticket TEXT)')
+    
     if which_ticket == "a" or which_ticket == "Golden ticket" or which_ticket == "golden ticket":
         print(name3 + " has bought a Golden ticket for 1000 sh")
-        c.execute('CREATE TABLE IF NOT EXISTS golden_ticket(name TEXT, ticket TEXT)')
         c.execute('INSERT INTO golden_ticket(name, ticket)VALUES(?,?)',(name3, which_ticket))
 
     elif which_ticket == "b" or which_ticket == "VIP ticket" or which_ticket == "V.I.P" or which_ticket == "V.I.P ticket":
         print(name3 + " has bought a VIP ticket for 5000 sh")
-        c.execute('CREATE TABLE IF NOT EXISTS VIP_ticket(name TEXT, ticket TEXT)')
+        
         c.execute('INSERT INTO VIP_ticket(name, ticket)VALUES(?,?)',(name3, which_ticket))
     elif which_ticket == "c" or which_ticket == "Ordinary ticket" or which_ticket == "ordinary ticket":
         print(name3 + " has bought an ordinary ticket for 5000 sh")
-        c.execute('CREATE TABLE IF NOT EXISTS ordinary_ticket(name TEXT, ticket TEXT)')
+        
         c.execute('INSERT INTO ordinary_ticket(name, ticket)VALUES(?,?)',(name3, which_ticket))
 buy_ticket()
 #        elif activities == "c":
@@ -107,7 +112,7 @@ def view_tickets():
     b All people with different tickets
 
     """) 
-    if what_to_view == "View all people in the conference with their tickets" or what_to_view == "a ":
+    if what_to_view == "View all people in the conference with their tickets" or what_to_view == "a":
         c.execute('SELECT * FROM golden_ticket')
         c.execute('SELECT * FROM VIP_ticket')
         c.execute('SELECT * FROM ordinary_ticket')
@@ -116,7 +121,13 @@ def view_tickets():
         for kol in data:
             print(kol)
     elif what_to_view == "All people with different tickets" or what_to_view == "b":
-        file = open('TicketsPeople.json')
+        c.execute('SELECT * FROM golden_ticket')
+        c.execute('SELECT * FROM VIP_ticket')
+        c.execute('SELECT * FROM ordinary_ticket')
+        c.execute('SELECT * FROM golden_ticket')
+        data = c.fetchall()
+        for kol in data:
+            print(kol)
     else:
         print("Inputed the wrong input")
         view_tickets()
