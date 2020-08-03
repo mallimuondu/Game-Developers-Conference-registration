@@ -1,6 +1,8 @@
 import datetime as time
-from tinydb import TinyDB
-
+from tinydb import TinyDB, Query
+import sqlite3
+conn = sqlite3.connect('main.db')
+c = conn.cursor()
 now = time.datetime.now()
 hour = now.hour
 if hour < 12:
@@ -11,68 +13,59 @@ elif hour > 18 and hour < 19:
     print("Good evening")
 else:
     print('Good night.')
-user = {"Nesh" : "12", "Malli" : "67890","Dad":"258"}
-#complete = False
-#while not complete:
-#    if username == user and password == password:
-#        continue        
-#    elif username not in user:
-#        print("This is not a valid username, raw_input username again!")
-#        continue
-#    elif password != user[username]:
-#        print("Password is not valid for . ")
-#        continue
-#    elif password == user[username]:
-#        print("Welcome  " + username)
 
-#def logic_login():
-#    username = raw_input("Please enter your usernmae: ")
-#    password = raw_input("Please enter your password: ")
-#
-#    complete = False
-#    if username not in user.keys():
-#        print("Username is invalid")
-#        logic_login()
-#    elif password != user.values():
-#        print("Password is invalid")
-#        logic_login()
-#    else:
-#        print("Welcome" + username)
-#        complete = True
-#        
-#logic_login()
-#        def #        activite():
-#            activite = print("""
-#            Welcome. These are the activities to do.
-#            a Adding a new person
-#            b Buying a new ticket
-#            c View all people
-#            d Exit the sytem
-#            """)
-        #        #        activite()
+user = {"Nesh" : "12", "Malli" : "67890","Dad":"258"}
+complete = False
+while not complete:
+    username = input("Please enter your usernmae: ")
+    password = input("Please enter your password: ")
+    if username == user and password == password:
+        continue        
+    elif username not in user:
+        print("This is not a valid username, input username again!")
+        continue
+    elif password != user[username]:
+        print("Password is not valid for . ")
+        continue
+    elif password == user[username]:
+        print("Welcome  " + username)
+        complete = True
+    #        def activite():
+    #            activite = print("""
+    #            Welcome. These are the activities to do.
+    #            a Adding a new person
+    #            b Buying a new ticket
+    #            c View all people
+    #            d Exit the sytem
+    #            """)
+#        activite()
 #        
 #        if activities == "a":
 def adding_new_person():
 
-    name1 = raw_input("Enter your first name:  ")
-    name2 = raw_input("Enter your second name:  ")
-    name3 = name1 + name2
+    name1 = input("Enter your first name:  ")
+    name2 = input("Enter your second name:  ")
+    global name3
+    name3 = name1 + " " + name2
     if name1 == "":
         print("Please enter your two names")
         adding_new_person()
     else:
-        print("You have added " + name3)
-        f.write(name4)
-        f.write("\n")
-    global name4
-    name4 = dict(name3)
+        c.execute('CREATE TABLE IF NOT EXISTS name(fName TEXT, sName Text)')
+        c.execute("INSERT INTO name(fName, sName)VALUES(?,?)",(name1, name2))
 
-#            repeating_raw_input = raw_input("Do you want to add another name: Yes(y) or No(n) ")
-#            if repeating_raw_input == "y":
+#        global name3
+#        name3 = dict(name1,name2)
+#        f.write(name3)
+#        f.write("\n")
+    
+
+#            repeating_input = input("Do you want to add another name: Yes(y) or No(n) ")
+#            if repeating_input == "y":
 #                adding_new_person()
 #            else:
-#                break()repeating_raw_input = raw_input("Do you want to add another name: Yes(y) or No(n) ")
-#            if repeating_raw_input == "y":
+#                break()repeating_input = input("Do you want to add another name: Yes(y) or No(n) ")
+#            if repeating_input == "y":
 #                adding_new_person()
 #            else:
 #                break()
@@ -80,51 +73,57 @@ def adding_new_person():
 adding_new_person()
 #        elif activities == "b":
 def buy_ticket():
-    which_ticket = raw_input("""
+    which_ticket = input("""
     There are the tickets we have.
     Golden ticket - 1500
     VIP ticket - 5000
     Ordinary ticket  - 500
     Which ticket do you want:  
     """)
-    db = TinyDB('TicketsPeople.json')
+    
+    db = TinyDB('People.json')
     table1 = db.table('TicketsPeople.json')
-    table1 = db.insert({name4:which_ticket})
-    file.write(c)
+    table1 = db.insert({name3:which_ticket})
+    
     if which_ticket == "a" or which_ticket == "Golden ticket" or which_ticket == "golden ticket":
-        print(name4 + " has bought a Golden ticket for 1000 sh")
-        goldenfile = 'TicketsPeople.json'
-        goldentable = goldenfile.table('Golden tickets')
-        goldentable.insert({name4:which_ticket,"Sharon Gee":"Golden Ticket","Honey Bee":"Golden Ticket","Cow Milk":"Golden Ticket"})
+        print(name3 + " has bought a Golden ticket for 1000 sh")
+        c.execute('CREATE TABLE IF NOT EXISTS golden_ticket(name TEXT, ticket TEXT)')
+        c.execute('INSERT INTO golden_ticket(name, ticket)VALUES(?,?)',(name3, which_ticket))
+
     elif which_ticket == "b" or which_ticket == "VIP ticket" or which_ticket == "V.I.P" or which_ticket == "V.I.P ticket":
-        print(name4 + " has bought a VIP ticket for 5000 sh")
-        vipfile = 'TicketsPeople.json'
-        viptable = goldenfile.table('VIP tickets')
-        viptable.insert({name4:which_ticket,"Peter Jack":"VIP ticket","James Matenge":"VIP ticket","Moja Mujona":"VIP Ticket"})
+        print(name3 + " has bought a VIP ticket for 5000 sh")
+        c.execute('CREATE TABLE IF NOT EXISTS VIP_ticket(name TEXT, ticket TEXT)')
+        c.execute('INSERT INTO VIP_ticket(name, ticket)VALUES(?,?)',(name3, which_ticket))
     elif which_ticket == "c" or which_ticket == "Ordinary ticket" or which_ticket == "ordinary ticket":
-        print(name4 + " has bought an ordinary ticket for 5000 sh")
-        ordinaryfile = 'TicketsPeople.json'
-        ordinarytable = goldenfile.table('Golden tickets')
-        ordinarytable.insert({name4:which_ticket,"Peter Jack":"Original Ticket","Josh Mathanega":"Original Ticket","John Mop":"Original Ticket"})
+        print(name3 + " has bought an ordinary ticket for 5000 sh")
+        c.execute('CREATE TABLE IF NOT EXISTS ordinary_ticket(name TEXT, ticket TEXT)')
+        c.execute('INSERT INTO ordinary_ticket(name, ticket)VALUES(?,?)',(name3, which_ticket))
 buy_ticket()
 #        elif activities == "c":
+User = Query()
 def view_tickets():
-    what_to_view = raw_input(""". These are the options available:
+    what_to_view = input(""". These are the options available:
     a View all people in the conference with their tickets
     b All people with different tickets
 
     """) 
-    if what_to_view == "a" or what_to_view == "View all people in the conference with their tickets":
-        file = open('differentPeopleTickets.js','r')
-#        print()
-        print(file)
-    elif what_to_view == "b" or what_to_view == "All people with different tickets":
-        e = file.read()
-        print(e)
+    if what_to_view == "View all people in the conference with their tickets" or what_to_view == "a ":
+        c.execute('SELECT * FROM golden_ticket')
+        c.execute('SELECT * FROM VIP_ticket')
+        c.execute('SELECT * FROM ordinary_ticket')
+        c.execute('SELECT * FROM golden_ticket')
+        data = c.fetchall()
+        for kol in data:
+            print(kol)
+    elif what_to_view == "All people with different tickets" or what_to_view == "b":
+        file = open('TicketsPeople.json')
+    else:
+        print("Inputed the wrong input")
+        view_tickets()
 view_tickets()
 #        elif activities == "d":
 def close():
-    press_e = raw_input("Please enter E/e to exit the sytem:  ")
+    press_e = input("Please enter E/e to exit the sytem:  ")
     if press_e == "E" or press_e == "e":
         print("Good Bye.")
         exit()
@@ -134,4 +133,4 @@ def close():
 
 close()
 #        else:
-#            print("You have raw_inputed the wrong raw_input")
+#            print("You have inputed the wrong input")
