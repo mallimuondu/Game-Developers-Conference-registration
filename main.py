@@ -120,6 +120,13 @@ def view_tickets():
         data = c.fetchall()
         for kol in data:
             print(kol)
+        repeat = input("Do you want to view tickets. Yes(y/Y) or No(n):  ")
+        if repeat == "y" or repeat == "Y":
+            view_tickets()
+        elif repeat == "n" or repeat == "N":
+            pepsi = "Yes"
+            for dub in pepsi:
+                break
     elif what_to_view == "All people with different tickets" or what_to_view == "b":
         c.execute('SELECT * FROM golden_ticket')
         c.execute('SELECT * FROM VIP_ticket')
@@ -128,6 +135,19 @@ def view_tickets():
         data = c.fetchall()
         for kol in data:
             print(kol)
+            
+            
+            
+        repeat = input("Do you want to view tickets. Yes(y/Y) or No(n):  ")
+        if repeat == "y" or repeat == "Y":
+            view_tickets()
+        elif repeat == "n" or repeat == "N":
+            cola = "Yes"
+            for dub in cola:
+                break
+        else:
+            print("Inputed the wrong thing")
+            
     else:
         print("Inputed the wrong input")
         view_tickets()
